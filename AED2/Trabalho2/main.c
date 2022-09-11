@@ -20,14 +20,20 @@ unsigned long long intercala(int v[], int p, int q, int r){
     while(i<q && j<r){
         if(v[i]<=v[j]){ // Se o elemento do primeiro subvetor é menor do que do segundo
             w[k++] = v[i++]; // Adiciona o elemento no vetor ordenado
-        }else{
+        }else{ // v[i] > v[j]
             w[k++] = v[j++];
-            num_inv += q - 1;
+            num_inv += q-i;
         }
     }
     // Garante que os elementos restantes dos subvetores sejam adicionados ao final
-    while(i<q) w[k++] = v[i++];
-    while(j<r) w[k++] = v[j++];
+
+    while(i<q){
+        w[k++] = v[i++];
+    }
+    while(j<r){
+        num_inv += q-i;
+        w[k++] = v[j++];
+    } 
 
     for(k=0; k<tam; k++){
         v[p+k] = w[k];
@@ -44,15 +50,13 @@ unsigned long long intercala(int v[], int p, int q, int r){
 unsigned long long contarInversoesR(int v[], int p, int r){
     int m;
     unsigned long long num_inv=0;
-
-    if(r - 1 > p){ 
+    if(r - p > 1){ 
         m = (p + r)/2; // calculo do limitante
         num_inv += contarInversoesR(v, p, m);
         num_inv += contarInversoesR(v, m, r);
         num_inv += intercala(v, p, m, r);
     }
     return num_inv;
-
 }
 
 // Conta as inversoes de um vetor 
@@ -70,6 +74,10 @@ void imprime(int v[], int n)
         printf("%d ", v[i]);
     printf("\n");
 }
+
+
+
+//____________________________MAIN_________________________________
 
 int main(int argc, char *argv[])
 {
@@ -95,11 +103,11 @@ int main(int argc, char *argv[])
     int *v = (int *)malloc(n * sizeof(int));
     for (i = 0; i < n; i++)
         fscanf(entrada, "%d", &v[i]);
-    // imprime(v, n);
+    
     num_inv = contarInversoes(v,n);
 
-    // printf("%I64u\n", num_inv);
     printf("%llu\n", num_inv);
+    //imprime(v, n);
 
     fclose(entrada);
     return 0;
