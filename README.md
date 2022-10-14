@@ -5,6 +5,8 @@ Assignments from Computer Science Bachelor
 
 POO - Programação Orientada a Objetos 2020/2
 
+ARQ - Aquitetura de Sistemas Computacionais 2020/2
+
 ## 2021
 
 AED - Algoritmos e estruturas de dados 2021/1
@@ -22,4 +24,7 @@ ES1 - Engenharia de Software 2021/2
 POOA - Programação Orientada a Objetos Avançada 2022/1
 
 AM - Aprendizado de Máquina 2022/1
+
+AED 2 - Algoritmos e Estruturas de Dados 2 2022/1
+
 
