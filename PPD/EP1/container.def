@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: ufscar/ubuntu_mpich:latest
+
+%help
+	Integral method to calculate pi to execute on OpenHPC UFSCar cluster
+
+%files
+	./app/. /opt
+
+%post
+	echo "Compiling programs..."
+	cd /opt && make
+	cp pi_omp pi_pth pi_seq /usr/bin/
+
+%runscript
+	exec $@
