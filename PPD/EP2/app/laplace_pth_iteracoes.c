@@ -25,7 +25,7 @@ int size;
 int num_threads;
 
 void *calculate_grid(void *);
-
+void *copy_grid(void *);
 
 // allocate memory for the grid
 void allocate_memory(){
@@ -118,15 +118,21 @@ int main(int argc, char *argv[]){
             t_id[i] = i;
             pthread_create(&threads[i], NULL, calculate_grid, (void *) &t_id[i]);
         }
-
-        if(iter % 100 == 0)
-
+        for(int i = 0; i < num_threads-1; i++){
+            pthread_join(threads[i], NULL);
+        }
+        for(int i=0;i<num_threads-1;i++){
+            t_id[i] = i;
+            pthread_create(&threads[i], NULL, copy_grid, (void *) &t_id[i]);
+        }
+        for(int i = 0; i < num_threads-1; i++){
+            pthread_join(threads[i], NULL);
+        }
+        
         iter++;
     }
 
-    for(int i = 0; i < num_threads-1; i++){
-        pthread_join(threads[i], NULL);
-    }
+
     // get the end time
     gettimeofday(&time_end, NULL);
 
@@ -166,7 +172,16 @@ void *calculate_grid(void *args){
                                          grid[i-1][j] + grid[i+1][j]);
             }
     }
-    
+}
+
+void *copy_grid(void *args){
+    int id = *(int *) args;
+    int chunk = size / num_threads;
+
+    // calcute begin and end step of the thread
+    int begin = id * chunk;
+    int end = begin + chunk;
+
     // copy the next values into the working array for the next iteration
     // kernel 2
     for(int i = begin+1; i <= end; i++) {
@@ -174,4 +189,5 @@ void *calculate_grid(void *args){
             grid[i][j] = new_grid[i][j];
         }
     }
+    
 }
