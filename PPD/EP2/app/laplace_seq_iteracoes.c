@@ -135,10 +135,6 @@ int main(int argc, char *argv[]){
                 grid[i][j] = new_grid[i][j];
             }
         }
-
-        if(iter % 100 == 0)
-            printf("Iteration %d\n", iter);
-
         iter++;
     }
 

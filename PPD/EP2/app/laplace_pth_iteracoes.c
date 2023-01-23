@@ -23,6 +23,7 @@ double **new_grid;
 // size of each side of the grid
 int size;
 int num_threads;
+int chunk;
 
 void *calculate_grid(void *);
 void *copy_grid(void *);
@@ -73,7 +74,6 @@ void save_grid(){
         }
         fprintf(file, "\n");
     }
-
     fclose(file);
 }
 
@@ -88,9 +88,11 @@ int main(int argc, char *argv[]){
     // variables to measure execution time
     struct timeval time_start;
     struct timeval time_end;
-
+    // input values from command line
     size = atoi(argv[1]);
     num_threads = atoi(argv[2]);
+
+    pthread_barrier_init(&barrier, NULL, num_threads);
 
     // create an array of p_threads
     pthread_t threads[num_threads];
@@ -101,37 +103,19 @@ int main(int argc, char *argv[]){
     // set grid initial conditions
     initialize_grid();
 
-    double err = 1.0;
-    int iter = 0;
-
-    printf("Jacobi relaxation calculation: %d x %d grid\n", size, size);
-
     // get the start time
     gettimeofday(&time_start, NULL);
 
-    // Jacobi iteration
-    // This loop will end if either the maximum change reaches below a set threshold (convergence)
-    // or a fixed number of maximum iterations have completed
-    
-    while (iter <= ITER_MAX) {
-        for(int i=0;i<num_threads-1;i++){
-            t_id[i] = i;
-            pthread_create(&threads[i], NULL, calculate_grid, (void *) &t_id[i]);
-        }
-        for(int i = 0; i < num_threads-1; i++){
-            pthread_join(threads[i], NULL);
-        }
-        for(int i=0;i<num_threads-1;i++){
-            t_id[i] = i;
-            pthread_create(&threads[i], NULL, copy_grid, (void *) &t_id[i]);
-        }
-        for(int i = 0; i < num_threads-1; i++){
-            pthread_join(threads[i], NULL);
-        }
-        
-        iter++;
-    }
+    // calculates the Laplace equation to determine each cell's next value
+    for(int i=0;i<num_threads;i++){
+        t_id[i] = i;
+        pthread_create(&threads[i], NULL, calculate_grid, (void *) &t_id[i]);
+	}
 
+    for(int i = 0; i < num_threads; i++){
+        pthread_join(threads[i], NULL);
+    }
+    pthread_barrier_destroy(&barrier);
 
     // get the end time
     gettimeofday(&time_end, NULL);
@@ -141,8 +125,8 @@ int main(int argc, char *argv[]){
 
     //save the final grid in file
     save_grid();
-
-    printf("\nKernel executed in %lf seconds with %d iterations and %d threads\n", exec_time, iter, num_threads);
+    
+    printf("Kernel executed in %lf seconds with %d iterations and %d threads\n", exec_time, ITER_MAX, num_threads);
 
     return 0;
 }
@@ -150,44 +134,44 @@ int main(int argc, char *argv[]){
 
 
 void *calculate_grid(void *args){
-    // calculates the Laplace equation to determine each cell's next value
+    int i;
     int id = *(int *) args;
-
+    int iter = 0;
     // calculate the chunk size
-    int chunk = size / num_threads;
+    chunk = size / num_threads;
 
     // calcute begin and end step of the thread
     int begin = id * chunk;
     int end = begin + chunk;
 
     if( id == num_threads-1 ){
-        end = size;
+        end = size-1;
     }
+
+    // Jacobi iteration
+    // This loop will end if either the maximum change reaches below a set threshold (convergence)
+    // or a fixed number of maximum iterations have completed
     
+    while (iter <= ITER_MAX){
         // kernel 1
-    for(int i = begin+1; i <= end; i++) {
-
-        for(int j = 1; j < size-1; j++) {
-            new_grid[i][j] = 0.25 * (grid[i][j+1] + grid[i][j-1] +
-                                         grid[i-1][j] + grid[i+1][j]);
+        for(int i = begin+1; i < end; i++) {
+            for(int j = 1; j < size-1; j++) {
+                new_grid[i][j] = 0.25 * (grid[i][j+1] + grid[i][j-1] +
+                                            grid[i-1][j] + grid[i+1][j]);
             }
-    }
-}
-
-void *copy_grid(void *args){
-    int id = *(int *) args;
-    int chunk = size / num_threads;
-
-    // calcute begin and end step of the thread
-    int begin = id * chunk;
-    int end = begin + chunk;
-
-    // copy the next values into the working array for the next iteration
-    // kernel 2
-    for(int i = begin+1; i <= end; i++) {
-        for( int j = 1; j < size-1; j++) {
-            grid[i][j] = new_grid[i][j];
         }
+        //printf("iter %d thread %d esperando o cálculo\n", iter, id);
+        pthread_barrier_wait(&barrier);
+        
+        // copy the next values into the working array for the next iteration
+        // kernel 2
+        for(int i = begin+1; i < end; i++) {
+            for( int j = 1; j < size-1; j++) {
+                grid[i][j] = new_grid[i][j];
+            }
+        }
+        //printf("iter %d thread %d esperando a cópia\n", iter, id);
+        pthread_barrier_wait(&barrier);
+        iter++;
     }
-    
 }
