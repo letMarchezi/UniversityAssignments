@@ -1,0 +1,24 @@
+*** SEQUENTIAL LAPLACE EQUATION GRID 1000X1000 ***
+Jacobi relaxation calculation: 1000 x 1000 grid
+
+Kernel executed in 26.212435 seconds with 3001 iterations 
+ 
+*** PTHREAD LAPLACE EQUATION grid 1000x1000 ***
+*** Parallel algorithm with 1 threads ***
+Kernel executed in 26.122940 seconds with 3000 iterations and 1 threads
+ 
+*** Parallel algorithm with 2 threads ***
+Kernel executed in 12.925054 seconds with 3000 iterations and 2 threads
+ 
+*** Parallel algorithm with 5 threads ***
+Kernel executed in 5.222540 seconds with 3000 iterations and 5 threads
+ 
+*** Parallel algorithm with 10 threads ***
+Kernel executed in 3.101168 seconds with 3000 iterations and 10 threads
+ 
+*** Parallel algorithm with 20 threads ***
+Kernel executed in 2.338170 seconds with 3000 iterations and 20 threads
+ 
+*** Parallel algorithm with 40 threads ***
+Kernel executed in 2.649561 seconds with 3000 iterations and 40 threads
+ 

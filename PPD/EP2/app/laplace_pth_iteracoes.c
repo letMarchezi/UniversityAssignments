@@ -134,14 +134,14 @@ int main(int argc, char *argv[]){
 
 
 void *calculate_grid(void *args){
-    int i;
     int id = *(int *) args;
     int iter = 0;
     // calculate the chunk size
     chunk = size / num_threads;
-
+    int begin = 1;
     // calcute begin and end step of the thread
-    int begin = id * chunk;
+    if (id)
+        begin = id * chunk;
     int end = begin + chunk;
 
     if( id == num_threads-1 ){
@@ -154,7 +154,7 @@ void *calculate_grid(void *args){
     
     while (iter <= ITER_MAX){
         // kernel 1
-        for(int i = begin+1; i < end; i++) {
+        for(int i = begin; i < end; i++) {
             for(int j = 1; j < size-1; j++) {
                 new_grid[i][j] = 0.25 * (grid[i][j+1] + grid[i][j-1] +
                                             grid[i-1][j] + grid[i+1][j]);
@@ -165,7 +165,7 @@ void *calculate_grid(void *args){
         
         // copy the next values into the working array for the next iteration
         // kernel 2
-        for(int i = begin+1; i < end; i++) {
+        for(int i = begin; i < end; i++) {
             for( int j = 1; j < size-1; j++) {
                 grid[i][j] = new_grid[i][j];
             }
