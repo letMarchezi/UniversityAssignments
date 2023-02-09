@@ -29,7 +29,7 @@ AED 2 - Algoritmos e Estruturas de Dados 2 2022/1
 
 BD - Banco de Dados 2022/2
 
-PAA - Projeto e Análise de Algoritmos
+PAA - Projeto e Análise de Algoritmos 2022/2
 
 PPD - Programação Paralela e Distribuida 2022/2
 
