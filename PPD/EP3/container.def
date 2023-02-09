@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: ufscar/ubuntu_mpich:latest
+
+%help
+	Paralelização da solução da equação de transferência de calor de Laplace pelo método de Jacobi usando Pthreads	
+
+%files
+	./app/. /opt
+
+%post
+	echo "Compiling programs..."
+	cd /opt && make
+	cp laplace_omp_it laplace_seq_it /usr/bin/
+
+%runscript
+	exec $@
