@@ -2,7 +2,7 @@ Bootstrap: docker
 From: ufscar/ubuntu_mpich:latest
 
 %help
-	Paralelização da solução da equação de transferência de calor de Laplace pelo método de Jacobi usando Pthreads	
+	Paralelização da solução da equação de transferência de calor de Laplace pelo método de Jacobi usando OpenMP	
 
 %files
 	./app/. /opt
