@@ -17,3 +17,4 @@ run:
 	mpirun -np 4 ./vecadd_mpi 9600000
 clean:
 	rm -f vecadd_seq vecadd_omp vecadd_mpi
+	

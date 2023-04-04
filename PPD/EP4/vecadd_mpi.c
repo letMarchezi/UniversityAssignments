@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
-#include <time.h>
-#include <sys/time.h>
 #define TOL 0.0000001
 
 int main(int argc, char *argv[]) {
@@ -12,11 +10,6 @@ int main(int argc, char *argv[]) {
         
         exit(-1);
     }
-     struct timeval time_start;
-    struct timeval time_end;
-
-    // get the start time
-    gettimeofday(&time_start, NULL);
 
     float *a, *b, *c, *res; // arrays of numbers
     int array_size = atoi(argv[1]); // total array size
@@ -74,14 +67,6 @@ int main(int argc, char *argv[]) {
                 err++;
         }
         t2 = MPI_Wtime();
-            // get the end time
-        gettimeofday(&time_end, NULL);
-
-        double exec_time = (double) (time_end.tv_sec - time_start.tv_sec) +
-                        (double) (time_end.tv_usec - time_start.tv_usec) / 1000000.0;
-
-        printf("vectors added with %d errors in %lf seconds\n", err, exec_time);
-
         printf("Soma completa com %d erros em %f segundos usando %d processo(s)\n\n", err,t2-t1, nprocs);
         free(a);
         free(b);
