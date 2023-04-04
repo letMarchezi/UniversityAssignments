@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
+#include <time.h>
+#include <sys/time.h>
 #define TOL 0.0000001
 
 int main(int argc, char *argv[]) {
@@ -16,10 +18,11 @@ int main(int argc, char *argv[]) {
     int size_per_proc; // array size to be calculated by each proc
     int rank, nprocs; // rank number and number of processes
     int err = 0; // error count
-    double t2, t1;
     float * ap;
 	float * bp;
 	float * cp;
+    struct timeval time_start;
+    struct timeval time_end;
 
     MPI_Init(&argc,&argv);           
     
@@ -40,7 +43,10 @@ int main(int argc, char *argv[]) {
             c[i] = 0.0;
             res[i] = i + 2 * i;
         }
+            
+            
     }
+    
     //~~~SHARED PROCESS~~~
     ap = (float *) malloc(sizeof(float)*size_per_proc);
 	bp = (float *) malloc(sizeof(float)*size_per_proc);
@@ -50,7 +56,8 @@ int main(int argc, char *argv[]) {
 	// scattering array b from MASTER node out to the other node
 	MPI_Scatter(b, size_per_proc, MPI_FLOAT, bp, size_per_proc, MPI_FLOAT, 0, MPI_COMM_WORLD); 
     
-    t1 = MPI_Wtime();
+    // get the start time
+    gettimeofday(&time_start, NULL);
     for(int i=0;i<size_per_proc;i++){
 		cp[i] = ap[i]+bp[i];
     }
@@ -66,8 +73,12 @@ int main(int argc, char *argv[]) {
             if(val > TOL)
                 err++;
         }
-        t2 = MPI_Wtime();
-        printf("Soma completa com %d erros em %f segundos usando %d processo(s)\n\n", err,t2-t1, nprocs);
+        // get the end time
+            
+        gettimeofday(&time_end, NULL);
+        double exec_time = (double) (time_end.tv_sec - time_start.tv_sec) +
+                       (double) (time_end.tv_usec - time_start.tv_usec) / 1000000.0;
+        printf("Soma completa com %d erros em %f segundos usando %d processo(s)\n\n", err,exec_time, nprocs);
         free(a);
         free(b);
         free(c);
