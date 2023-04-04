@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "time.h": "c",
+        "array": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "utility": "c",
+        "cmath": "c",
+        "random": "c",
+        "type_traits": "c"
+    }
+}
