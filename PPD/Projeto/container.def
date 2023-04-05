@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: ufscar/ubuntu_mpich:latest
+
+%help
+	Paralelização da simulação da propagação de onda acústica em domínio 2D
+
+%files
+	./app/. /opt
+
+%post
+	echo "Compiling programs..."
+	cd /opt && make
+	cp wave_seq wave_omp /usr/bin/
+
+%runscript
+	exec $@
