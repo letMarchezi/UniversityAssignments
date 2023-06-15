@@ -15,8 +15,8 @@ int main(int argc, char ** argv) {
   bufferdevice * monitor;
   window * janela;
   viewport * porta;
-  polygon * poligono1;
-  object2d * obj1;
+  polygon * poligono1, * poligono2;
+  object2d * obj1, * obj2;
   
   monitor = CreateBuffer(800,600); // Cria um monitor virtual com 800x600 entradas
   
@@ -50,7 +50,7 @@ int main(int argc, char ** argv) {
   obj1 = CreateObject2d(1);
   SetObject(poligono1,obj1);
   
-  janela = CreateWindow(-10.0,-10.0,10.0,10.0); // cria uma janela de visualização (coordenadas no SRU)
+  janela = CreateWindow(-15.0,-15.0,15.0,15.0); // cria uma janela de visualização (coordenadas no SRU)
 
   porta = CreateViewPort(1, 1, 800, 600); // Cria uma viewport...
   // ...no caso uma única saída para o dispositivo de visualização com 800x600 entradas
@@ -58,7 +58,14 @@ int main(int argc, char ** argv) {
   // Desenha os polígonos e o objeto no SRD
   DrawObject(obj1,janela,porta,monitor,1);
 
+  obj2 = TransObj(obj1,SetRotMatrix(90));
+  DrawObject(obj2,janela,porta,monitor,2);
   
+
+  obj2 = TransObj(obj1,SetRotMatrix(180));
+  DrawObject(obj2,janela,porta,monitor,2);
+  
+
   // Exibe o SRD no monitor
   Dump2X(monitor,palheta);
   //Display_SRD(monitor,palheta);  // Uma opção interessante...
