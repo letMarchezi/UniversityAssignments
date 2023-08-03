@@ -1,0 +1,3 @@
+teapot_faces.csv and teapot_vertices.csv were extracted from 
+the "misc3d" r-package, link: 
+https://gitlab.com/luke-tierney/misc3d/-/blob/master/data/teapot.rda
