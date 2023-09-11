@@ -1,0 +1,7 @@
+A) O algoritmo não funciona para valores iguais ou maiores que 7 pois todos os números no intervalo entre [7,10] satisfazem no 
+mínimo 2 condições e resultam em dois conceitos diferentes. Por exemplo, ao inserir MF=7 o algoritmo imprime Conceito B e 
+Conceito C, visto que o teste MF>=7 é verdadeiro assim como MF>=6.
+Já que o programa criado pelo aluno não trata os intervalos para classificação da média final, é possivel usar as seguintes soluções:
+- Implementar funcionalidade semelhante ao encadeamento de condicionais, assim, se um teste é verdadeiro, o próximo não é executado.
+- Incluir testes nas condições para limitar o intervalo, por exemplo, se MF>=7 e Mf<9 simultaneamente. 
+Dessa forma, a inconsistência do código em imprimir o resultado adequado será solucionada.
