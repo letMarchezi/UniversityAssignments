@@ -3,6 +3,10 @@ Assignments from Computer Science Bachelor
 
 ## 2020
 
+CAP - Construção de Algoritmos e Programação 2020/1
+
+CDI - Cálculo Diferencial e Integral 2020/1
+
 POO - Programação Orientada a Objetos 2020/2
 
 ARQ - Aquitetura de Sistemas Computacionais 2020/2
