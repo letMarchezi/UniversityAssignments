@@ -38,3 +38,10 @@ PAA - Projeto e Análise de Algoritmos 2022/2
 PPD - Programação Paralela e Distribuida 2022/2
 
 
+## 2023
+
+PDI - Processamento Digital de Imagens 2023/1
+
+PIBD - Projeto e Implementação de Banco de Dados 2023/1
+
+
